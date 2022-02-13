@@ -1,1 +1,1 @@
-call npm i && npm run build && npm run start
+call npm i && npm run build && npm run s

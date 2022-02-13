@@ -1,1 +1,1 @@
-call npm run start
+call npm run s
