@@ -10,7 +10,7 @@ const Form = () => {
   const [total, setTotal] = useState('')
   const [isDisabled, setIsDisabled] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState({ total: '', mobileNo: '' })
+  const [error, setError] = useState({ total: '', mobileNo: '', resError: '' })
   const gstRef = useRef<HTMLInputElement>(null)
   const rechargeAmountRef = useRef<HTMLInputElement>(null)
 
@@ -36,16 +36,18 @@ const Form = () => {
   }, [total, mobileNo, error])
 
   useEffect(() => {
-    if (mobileNo.length === 7) setError({ ...error, mobileNo: '' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (mobileNo.length === 7) setError((error) => ({ ...error, mobileNo: '' }))
   }, [mobileNo.length])
 
   useEffect(() => {
     const totalAmount = parseInt(total)
     if (totalAmount >= 20 && totalAmount < 500)
-      setError({ ...error, total: '' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      setError((error) => ({ ...error, total: '' }))
   }, [total])
+
+  useEffect(() => {
+    setError((error) => ({ ...error, resError: '' }))
+  }, [mobileNo])
 
   const handleTotalChange = (e: ChangeEvent<HTMLInputElement>) => {
     const re = /^[0-9]+$/
@@ -74,30 +76,34 @@ const Form = () => {
     }
   }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
 
-    fetch('/api/form', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        mobileNo,
-        total,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data)
-        if (data?.bmlUrl) {
-          router.push(data?.bmlUrl)
-        }
+    try {
+      const res = await fetch('/api/form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mobileNo,
+          total,
+        }),
       })
-      .catch((error) => {
-        console.error(error)
-      })
+
+      const data = await res.json()
+      console.log(data)
+      if (res.status === 401) {
+        setIsLoading(false)
+        return setError((curr) => ({ ...curr, resError: data.error }))
+      }
+
+      router.push(data.bmlUrl)
+    } catch (error) {
+      setIsLoading(false)
+      console.error(error)
+    }
   }
 
   return (
@@ -112,7 +118,9 @@ const Form = () => {
           onBlur={handleMobileNoBlur}
           // autoComplete='off'
         />
-        <div className={styles.error}>{error.mobileNo}</div>
+        {(error.mobileNo || error.resError) && (
+          <div className={styles.error}>{error.mobileNo || error.resError}</div>
+        )}
       </div>
 
       <div className={styles.inputWrapper}>
@@ -127,7 +135,7 @@ const Form = () => {
           onChange={handleTotalChange}
           onBlur={handleTotalBlur}
         />
-        <div className={styles.error}>{error.total}</div>
+        {error.total && <div className={styles.error}>{error.total}</div>}
       </div>
 
       <div className={styles.info}>

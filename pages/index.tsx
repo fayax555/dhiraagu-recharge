@@ -5,7 +5,7 @@ import Form from 'components/Form'
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <>
       <Head>
         <title>dhiraagu recharge</title>
         <meta name='description' content='recharge with 1 click' />
@@ -15,7 +15,7 @@ const Home: NextPage = () => {
         <h1>Dhiraagu Recharge</h1>
         <Form />
       </main>
-    </div>
+    </>
   )
 }
 
