@@ -108,16 +108,21 @@ const Form = ({ setErr500 }: Props) => {
       })
 
       const data = await res.json()
-      console.log(data)
-      if (res.status === 401) {
+
+      if (!res.ok) {
         setIsLoading(false)
-        return setError((curr) => ({ ...curr, err401: data.error }))
+
+        if (res.status === 401) {
+          return setError((curr) => ({ ...curr, err401: data.error }))
+        } else {
+          throw new Error(data.error)
+        }
       }
 
-      router.push(data.bmlUrl)
+      if (data?.bmlUrl) router.push(data.bmlUrl)
     } catch (error) {
-      setErr500('An error occurred!')
       setIsLoading(false)
+      setErr500('An error occurred!')
       setTimeout(() => {
         setErr500('')
       }, 3000)
