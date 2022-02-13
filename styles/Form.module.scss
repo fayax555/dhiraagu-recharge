@@ -1,0 +1,89 @@
+.form {
+  label,
+  input {
+    display: block;
+    color: $text;
+    font-size: rem(18);
+  }
+
+  label {
+    font-size: rem(15);
+  }
+
+  input {
+    border-radius: 5px;
+    width: 100%;
+    height: 40px;
+    margin-top: 5px;
+    padding: 0 10px;
+    border: 3px solid $text;
+
+    &:focus {
+      outline: none;
+      border: 3px solid $primary;
+    }
+  }
+}
+
+.button {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: $primary;
+  color: white;
+  font-size: rem(18);
+  text-align: center;
+  transition: opacity 0.15s ease-in-out;
+  cursor: pointer;
+  margin: 25px 0 10px;
+  border: 3px solid rgba(229, 188, 188, 0);
+  outline: none;
+  position: relative;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    border: 3px solid $text;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    position: absolute;
+    right: 30px;
+    top: 0;
+    height: 100%;
+  }
+}
+
+.inputWrapper {
+  position: relative;
+  margin-bottom: 35px;
+}
+
+.error {
+  position: absolute;
+  font-size: rem(13);
+  top: 65px;
+  color: $error;
+}
+
+.info {
+  max-width: fit-content;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: baseline;
+  margin-bottom: 15px;
+
+  input {
+    background-color: #ddd;
+  }
+}

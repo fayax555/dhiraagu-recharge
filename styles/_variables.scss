@@ -1,0 +1,7 @@
+$primary: hsl(22, 94%, 44%);
+$text: hsl(255, 30%, 13%);
+$error: hsl(0, 94%, 36%);
+
+@function rem($value) {
+  @return calc($value / 16) + rem;
+}
