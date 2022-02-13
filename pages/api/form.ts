@@ -8,9 +8,9 @@ export default async function handler(
   const browser = await chromium.launch({
     chromiumSandbox: false,
     headless: false,
-    proxy: {
-      server: '202.1.197.227:80',
-    },
+    // proxy: {
+    //   server: '103.110.109.139:3127',
+    // },
   })
 
   try {
