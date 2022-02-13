@@ -6,11 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const browser = await chromium.launch(
-      process.env.NODE_ENV === 'production'
-        ? { chromiumSandbox: false }
-        : { headless: false }
-    )
+    const browser = await chromium.launch({ chromiumSandbox: false })
     const context = await browser.newContext()
     const page = await context.newPage()
 

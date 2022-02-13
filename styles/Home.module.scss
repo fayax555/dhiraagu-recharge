@@ -3,10 +3,19 @@
   border-radius: 10px;
   max-width: 550px;
   padding: 30px 15px;
+  position: relative;
 
   h1 {
     color: $text;
     font-size: clamp(1.875rem, 1.7vw + 1.5rem, 2.25rem);
     margin-bottom: 20px;
   }
+}
+
+.err500 {
+  color: $error;
+  position: absolute;
+  inset: 5px;
+  text-align: center;
+  font-size: rem(18);
 }

@@ -1,16 +1,31 @@
-import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  FormEvent,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 import styles from 'styles/Form.module.scss'
 import { useRouter } from 'next/router'
 
-interface Props {}
+interface Props {
+  setErr500: Dispatch<SetStateAction<string>>
+}
 
-const Form = () => {
+const Form = ({ setErr500 }: Props) => {
   const router = useRouter()
   const [mobileNo, setMobileNo] = useState('')
   const [total, setTotal] = useState('')
   const [isDisabled, setIsDisabled] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState({ total: '', mobileNo: '', resError: '' })
+  const [error, setError] = useState({
+    total: '',
+    mobileNo: '',
+    err401: '',
+    err500: '',
+  })
   const gstRef = useRef<HTMLInputElement>(null)
   const rechargeAmountRef = useRef<HTMLInputElement>(null)
 
@@ -46,7 +61,7 @@ const Form = () => {
   }, [total])
 
   useEffect(() => {
-    setError((error) => ({ ...error, resError: '' }))
+    setError((error) => ({ ...error, err401: '' }))
   }, [mobileNo])
 
   const handleTotalChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -96,12 +111,16 @@ const Form = () => {
       console.log(data)
       if (res.status === 401) {
         setIsLoading(false)
-        return setError((curr) => ({ ...curr, resError: data.error }))
+        return setError((curr) => ({ ...curr, err401: data.error }))
       }
 
       router.push(data.bmlUrl)
     } catch (error) {
+      setErr500('An error occurred!')
       setIsLoading(false)
+      setTimeout(() => {
+        setErr500('')
+      }, 3000)
       console.error(error)
     }
   }
@@ -118,8 +137,8 @@ const Form = () => {
           onBlur={handleMobileNoBlur}
           // autoComplete='off'
         />
-        {(error.mobileNo || error.resError) && (
-          <div className={styles.error}>{error.mobileNo || error.resError}</div>
+        {(error.mobileNo || error.err401) && (
+          <div className={styles.error}>{error.mobileNo || error.err401}</div>
         )}
       </div>
 
@@ -153,7 +172,11 @@ const Form = () => {
         />
       </div>
 
-      <button className={styles.button} type='submit' disabled={isDisabled}>
+      <button
+        className={styles.button}
+        type='submit'
+        disabled={isDisabled || isLoading}
+      >
         <span>Continue</span>
         {isLoading && loadingSvg}
       </button>
