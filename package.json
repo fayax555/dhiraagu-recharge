@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "npm run open-browser && next start",
+    "start": "next start",
     "open-browser": "start http://localhost:3000",
     "lint": "next lint"
   },
